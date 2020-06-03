@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<!-- Left side column. contains the logo and sidebar -->
+	<aside class="main-sidebar" th:fragment="menu">
+
+		<!-- sidebar: style can be found in sidebar.less -->
+		<section class="sidebar">
+
+			<!-- Sidebar Menu -->
+			<ul class="sidebar-menu" data-widget="tree">
+				<li class="header">Chức năng</li>
+				<!-- Optionally, you can add icons to the links -->
+				<li class="treeview"><a href="#"> <i class="fa fa-folder"></i>
+						<span>Quản lý nhân viên</span> <span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+					<ul class="treeview-menu">
+						<li><a href="invoice.html"><i class="fa fa-circle-o"></i>Danh
+								sách nhân viên</a></li>
+						<li><a href="profile.html"><i class="fa fa-circle-o"></i>Thêm
+								nhân viên</a></li>
+					</ul></li>
+				<li class="treeview"><a href="#"> <i class="fa fa-folder"></i>
+						<span>Quản lý chi</span> <span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+					<ul class="treeview-menu">
+						<li><a href="invoice.html"><i class="fa fa-circle-o"></i>Quản
+								lý nhập kho</a></li>
+						<li><a href="profile.html"><i class="fa fa-circle-o"></i>Quản
+								lý trả lương</a></li>
+					</ul></li>
+				<li class="treeview active menu-open"><a href="#"> <i
+						class="fa fa-folder"></i> <span>Quản lý thu</span> <span
+						class="pull-right-container"> <i
+							class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+					<ul class="treeview-menu">
+						<li class="active"><a href="invoice.html"><i
+								class="fa fa-circle-o"></i>Quản lý bán hàng</a></li>
+					</ul></li>
+				<li class="treeview"><a href="#"> <i class="fa fa-folder"></i>
+						<span>Thống kê chi</span> <span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+					<ul class="treeview-menu">
+						<li><a href="invoice.html"><i class="fa fa-circle-o"></i>Thống
+								kê nhập kho</a></li>
+						<li><a href="profile.html"><i class="fa fa-circle-o"></i>Thống
+								kê trả lương</a></li>
+						<li><a href="profile.html"><i class="fa fa-circle-o"></i>Tổng
+								chi</a></li>
+					</ul></li>
+				<li class="treeview"><a href="#"> <i class="fa fa-folder"></i>
+						<span>Thống kê thu</span> <span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+					<ul class="treeview-menu">
+						<li><a href="invoice.html"><i class="fa fa-circle-o"></i>Thống
+								kê bán hàng</a></li>
+						<li><a href="profile.html"><i class="fa fa-circle-o"></i>Tổng
+								thu</a></li>
+					</ul></li>
+			</ul>
+			<!-- /.sidebar-menu -->
+		</section>
+		<!-- /.sidebar -->
+	</aside>
+</body>
+</html>
