@@ -1,0 +1,43 @@
+package com.example.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.converter.ItemConverter;
+import com.example.model.BillWareHouseEntity;
+import com.example.model.ItemEntity;
+import com.example.model.WareHouseEntity;
+import com.example.model.dto.ItemDTO;
+import com.example.repository.ItemRepository;
+import com.example.service.ItemService;
+
+@Service
+public class ItemServiceImpl implements ItemService {
+
+	@Autowired
+	private ItemRepository itemRepository;
+
+	@Autowired
+	private ItemConverter itemConverter;
+
+	@Override
+	public long saveList(List<ItemDTO> list, BillWareHouseEntity billWareHouseEntity, WareHouseEntity wareHouseEntity) {
+		List<ItemEntity> entities = itemRepository
+				.saveAll(itemConverter.toEntities(list, billWareHouseEntity, wareHouseEntity));
+		return entities.size();
+	}
+
+	@Override
+	public List<ItemDTO> findAll() {
+		List<ItemEntity> entities = itemRepository.findAll();
+		List<ItemDTO> result = new ArrayList<>();
+		entities.forEach(e -> {
+			result.add(itemConverter.toDTO(e));
+		});
+		return result;
+	}
+
+}

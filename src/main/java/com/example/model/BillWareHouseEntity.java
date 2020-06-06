@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,14 +15,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity
 @Table(name = "tbl_hoadonnhapkho")
+@EntityListeners(AuditingEntityListener.class)
 public class BillWareHouseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "maHoaDonNhapKho")
 	private Integer id;
 
+	@CreatedBy
 	@Column(name = "tenNguoiNhap")
 	private String createBy;
 
@@ -31,6 +38,7 @@ public class BillWareHouseEntity {
 	@Column(name = "amount")
 	private long amount;
 
+	@CreatedDate
 	@Column(name = "time")
 	private Timestamp createTime;
 

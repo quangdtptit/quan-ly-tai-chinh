@@ -1,9 +1,11 @@
 package com.example.model;
 
+import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,8 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity
 @Table(name = "tbl_hanghoa")
+@EntityListeners(AuditingEntityListener.class)
 public class ItemEntity {
 
 	@Id
@@ -33,6 +39,10 @@ public class ItemEntity {
 
 	@Column(name = "soLuong")
 	private int total;
+
+	@CreatedDate
+	@Column(name = "createDate")
+	private Date createDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maKho", nullable = false)
@@ -107,6 +117,14 @@ public class ItemEntity {
 
 	public void setItemBoughtEntities(Set<ItemBoughtEntity> itemBoughtEntities) {
 		this.itemBoughtEntities = itemBoughtEntities;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 }
