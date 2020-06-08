@@ -49,12 +49,22 @@ public class ItemController {
 		return mav;
 	}
 
-	@RequestMapping(value = "/stocker/items/{id}", method = RequestMethod.GET)
-	public String editsPage(@PathVariable(name = "id", required = false) Integer id) {
+	@RequestMapping(value = { "/stocker/items/", "/stocker/items/{id}" }, method = RequestMethod.GET)
+	public ModelAndView editsPage(@PathVariable(name = "id", required = false) Integer id) {
+		ItemDTO item = new ItemDTO();
 		if (id != null) {
-
+			item = itemService.findById(id);
 		}
-		return "items/edits-item";
+		ModelAndView mav = new ModelAndView("items/edits-item");
+		mav.addObject("item", item);
+		return mav;
+	}
+
+	@RequestMapping(value = { "/stocker/items/" }, method = RequestMethod.POST)
+	public String editsPage(@ModelAttribute ItemDTO itemDTO) {
+		itemDTO = itemService.save(itemDTO);
+		System.out.println("SAVE BY ID :" + itemDTO.getId());
+		return "redirect:/stocker/items";
 	}
 
 	// DANG BO QUA BUOC CHECK VALIDATE UploadExcelItemDTO

@@ -36,18 +36,62 @@
 		<div class="content-wrapper">
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
-				<h4>Quản lý nhập kho</h4>
+				<h4 th:if="${item.id}">Sửa mặt hàng</h4>
+				<h4 th:unless="${item.id}">Thêm mặt hàng</h4>
 				<ol class="breadcrumb">
 					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
 							chủ</a></li>
-					<li class="active">Quản lý nhập kho</li>
+					<li class="active" th:if="${item.id}">Sửa mặt hàng</li>
+					<li class="active" th:unless="${item.id}">Thêm mặt hàng</li>
 				</ol>
 			</section>
 
 			<!-- Main content -->
 			<section class="invoice">
 				<div class="row">
-					
+					<div class="col-md-12">
+						<div class="box box-info" style="border-top-color: white;">
+							<!-- form start -->
+							<form th:action="@{/stocker/items/}" class="form-horizontal" th:object="${item}" method="POST">
+								<div class="box-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Tên mặt hàng</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" 
+												placeholder="Điền tên mặt hàng ..." th:field="*{name}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Giá</label>
+										<div class="col-sm-10">
+											<input type="number" class="form-control" 
+												placeholder="Điền giá ..." th:field="*{price}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Số lượng</label>
+										<div class="col-sm-10">
+											<input type="number" class="form-control" 
+												placeholder="Điền số lượng  ..." th:field="*{total}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Mô tả</label> 
+										<div class="col-sm-10">
+											<textarea class="form-control" rows="3" placeholder="Mô tả sản phẩm ..." th:field="*{des}"></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<input type="submit" class="btn btn-info" value="Đồng ý">
+										</div>
+									</div>
+								</div>
+								<input type="hidden" th:field="*{id}">
+							</form>
+						</div>
+					</div>
 				</div>
 
 			</section>

@@ -7,6 +7,8 @@ import com.example.model.enumerate.CustomCellType;
 
 public class ItemDTO {
 
+	private Integer id;
+
 	@ColumnExcel(col = 0, title = "Tên hàng", type = CustomCellType._STRING)
 	private String name;
 
@@ -59,6 +61,14 @@ public class ItemDTO {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

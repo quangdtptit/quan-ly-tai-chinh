@@ -11,4 +11,8 @@ public interface ItemService {
 	long saveList(List<ItemDTO> list, BillWareHouseEntity billWareHouseEntity, WareHouseEntity wareHouseEntity);
 	
 	List<ItemDTO> findAll();
+	
+	ItemDTO findById(Integer id);
+	
+	ItemDTO save(ItemDTO itemDTO);
 }

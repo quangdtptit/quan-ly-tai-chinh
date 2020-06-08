@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,22 @@ public class ItemServiceImpl implements ItemService {
 			result.add(itemConverter.toDTO(e));
 		});
 		return result;
+	}
+
+	@Override
+	public ItemDTO findById(Integer id) {
+		Optional<ItemEntity> optItem = itemRepository.findById(id);
+		if (optItem.isPresent()) {
+			return itemConverter.toDTO(optItem.get());
+		}
+		return null;
+	}
+
+	@Override
+	public ItemDTO save(ItemDTO itemDTO) {
+		ItemEntity entity = itemConverter.toEntity(itemDTO);
+		entity = itemRepository.save(entity);
+		return itemConverter.toDTO(entity);
 	}
 
 }
