@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.BillWareHouseEntity;
+import com.example.model.ItemEntity;
+import com.example.model.ItemOutputEntity;
 import com.example.model.SupplierEntity;
 import com.example.model.WareHouseEntity;
 import com.example.model.dto.ItemDTO;
 import com.example.model.dto.UploadExcelItemDTO;
 import com.example.repository.BillWareHouseRepository;
+import com.example.repository.ItemOuputRepository;
+import com.example.repository.ItemRepository;
 import com.example.repository.SupplierRepository;
 import com.example.repository.WareHouseRepository;
 import com.example.service.ItemService;
@@ -37,6 +41,12 @@ public class ItemController {
 
 	@Autowired
 	private BillWareHouseRepository billWareHouseRepository;
+
+	@Autowired
+	private ItemRepository itemRepository;
+
+	@Autowired
+	private ItemOuputRepository itemOuputRepository;
 
 	@Autowired
 	private WareHouseRepository wareHouseRepository;
@@ -71,7 +81,6 @@ public class ItemController {
 	@RequestMapping(value = "/stocker/items/upload", method = RequestMethod.POST)
 	public String uploadExcel(@ModelAttribute UploadExcelItemDTO upItemDTO) {
 
-		System.out.println(upItemDTO);
 		List<ItemDTO> itemDTOs = new ExcelUtil().importFileExcel(FileUtil.toFile(upItemDTO.getFile()), ItemDTO.class);
 
 		SupplierEntity supplierEntity = null;
@@ -103,6 +112,27 @@ public class ItemController {
 		List<ItemDTO> list = itemService.findAll();
 		boolean checked = new ExcelUtil().exportExcel(list, response, "item");
 		System.out.println("DOWNLOAD CHECKED :" + checked);
+	}
+
+	@RequestMapping(value = "/stocker/output", method = RequestMethod.POST)
+	public String xuatKho(@ModelAttribute ItemDTO itemDTO) {
+		ItemEntity itemInDB = itemRepository.findById(itemDTO.getId()).get();
+		if (itemInDB.getTotal() < itemDTO.getTotal() || itemDTO.getPrice() == 0 || itemDTO.getTotal() == 0) {
+			return "redirect:/stocker/items?error";
+		}
+		itemInDB.setTotal(itemInDB.getTotal() - itemDTO.getTotal());
+		itemInDB = itemRepository.save(itemInDB);
+		ItemOutputEntity itemOutputEntity = itemInDB.getItemOutputEntity();
+		if (itemOutputEntity == null) {
+			itemOutputEntity = new ItemOutputEntity();
+		}
+		itemOutputEntity.setPrice(itemDTO.getPrice());
+		itemOutputEntity.setName(itemInDB.getName());
+		itemOutputEntity.setTotal(itemOutputEntity.getTotal() + itemDTO.getTotal());
+		itemOutputEntity.setDes(itemInDB.getDes());
+		itemOutputEntity.setItemEntity(itemInDB);
+		itemOuputRepository.save(itemOutputEntity);
+		return "redirect:/stocker/items";
 	}
 
 }

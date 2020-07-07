@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Thống kê nhập kho</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+<link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}">
+<!-- Google Font -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<style type="text/css">
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding: 10px;
+}
+</style>
+
+<script type="text/javascript">
+	function getVND(x) {
+		return x.toLocaleString('it-IT', {
+			style : 'currency',
+			currency : 'VND'
+		});
+	}
+</script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<!-- Main Header -->
+		<header th:replace="layout/header :: header"> </header>
+
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside th:replace="layout/menu :: menu"></aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h4>Thống kê nhập kho</h4>
+				<ol class="breadcrumb">
+					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
+							chủ</a></li>
+					<li class="active">Thống kê nhập kho</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="invoice">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="page-header"
+							style="display: flex; justify-content: space-between; align-items: center; margin: 0">
+							<div class="btn-group">
+								<button name="btnReport" type="button"
+									class="btn btn-default btn-sm active">Ngày</button>
+								<button name="btnReport" class="btn btn-default btn-sm">Tháng</button>
+								<button name="btnReport" class="btn btn-default btn-sm">Quý</button>
+							</div>
+							<div class="input-group">
+								<button id="chart-view" class="btn btn-default btn-sm"
+									data-toggle="modal" data-target="#modal-chart-view">Xem
+									dưới dạng biểu đồ</button>
+							</div>
+						</div>
+					</div>
+					<!-- /.col -->
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12" id="content">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>Ngày</th>
+									<th>Tổng số lượng</th>
+									<th>Tổng tiền</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer th:replace="layout/footer :: footer"> </footer>
+
+		<div class="modal fade" id="modal-chart-view">
+			<div class="modal-dialog" style="width: 900px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">Biểu đồ</h4>
+					</div>
+					<div class="modal-body">
+						<div id="high-charts"
+							style="width: 100%; height: 400px; margin: 0 auto"></div>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+
+		<div class="modal fade" id="modal-default">
+			<div class="modal-dialog" style="width: 900px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title" id="model-title">Chi tiết ...</h4>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%">
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>Ngày</th>
+									<th>Mã hóa đơn</th>
+									<th>Tên nhập kho</th>
+									<th>Tên NCC</th>
+									<th>Tên sản phẩm</th>
+									<th>Giá</th>
+									<th>Số lượng</th>
+								</tr>
+							</thead>
+							<tbody id="tableDetails">
+								<tr>
+									<td rowspan="2">1</td>
+									<td rowspan="2">20-10-2020</td>
+									<td rowspan="2">1000</td>
+									<td rowspan="2">ADMIN</td>
+									<td rowspan="2">NCC ABC</td>
+									<td>Áo Kaki</td>
+									<td>250.000 VND</td>
+									<td>20</td>
+								</tr>
+								<tr>
+									<td>Quần Kaki</td>
+									<td>200.000 VND</td>
+									<td>30</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</div>
+	<!-- ./wrapper -->
+
+
+
+	<!-- REQUIRED JS SCRIPTS -->
+	<!-- jQuery 3 -->
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    let value = "Ngày";
+		    loadReportByTable(value);
+		    
+	
+		    function loadReportByTable(type) {
+		        var data = {};
+		        var nameDay = "Ngày";
+		        switch (type) {
+		            case "Ngày":
+		                data['type'] = 1;
+		                nameDay = "Ngày";
+		                break;
+		            case "Tháng":
+		                data['type'] = 2;
+		                nameDay = "Tháng";
+		                break;
+		            case "Quý":
+		                data['type'] = 3;
+		                nameDay = "Quý";
+		                break;
+		            default:
+		                data['type'] = 1;
+		                nameDay = "Ngày";
+		                break;
+		        }
+	
+		        $('#content').empty();
+		        let _html = '<table class="table table-striped">' +
+		            '<thead>' +
+		            '<tr>' +
+		            '<th>STT</th>' +
+		            '<th>' +
+		            nameDay +
+		            '</th>' +
+		            '<th>Tổng số lượng</th>' +
+		            '<th>Tổng tiền</th>' +
+		            '<th></th>' +
+		            '</tr>' + '</thead>' + '<tbody>';
+		        const req = $.ajax({
+		            url: "/api/v1/report/stocker/table",
+		            type: "POST",
+		            contentType: "application/json; charset=utf-8",
+		            dataType: "json",
+		            data: JSON.stringify(data)
+		        });
+	
+		        req.done(function(resp) {
+		            $.each(resp.datas, function(i, item) {
+		                _html += '<tr>' +
+		                    '<td>' +
+		                    (i + 1) +
+		                    '</td>' +
+		                    '<td>' +
+		                    item.nameDay +
+		                    '</td>' +
+		                    '<td>' +
+		                    item.sumTotal +
+		                    '</td>' +
+		                    '<td>' +
+		                    getVND(item.sumAmount) +
+		                    '</td>' +
+		                    '<td><a id="' + item.nameDay + '" href="#" name="viewDetails" data-toggle="modal" data-target="#modal-default">Xem chi tiết</a></td>' +
+		                    '</tr>';
+		            });
+	
+		            _html += '<tr>' +
+		                '<td style="color: red;font-weight: bold;">TỔNG</td>' +
+		                '<td></td>' +
+		                '<td style="color: red;font-weight: bold;">' +
+		                resp.totalNumber +
+		                '</td>' +
+		                '<td style="color: red;font-weight: bold;">' +
+		                getVND(resp.totalAmount) +
+		                '</td>' + '<td></td>' +
+		                '</tr>';
+		            _html += '</tbody>' + '</table>';
+	
+		            $('#content').append(_html);
+		        })
+		    }
+	
+		    $(document).on('click', 'a[name="viewDetails"]', function(e) {
+		        e.preventDefault();
+		        var valueDate = $(this).attr(
+		            'id');
+		        var type = 1;
+		        switch (value) {
+		            case "Ngày":
+		                type = 1;
+		                break;
+		            case "Tháng":
+		                type = 2;
+		                break;
+		            case "Quý":
+		                type = 3;
+		                break;
+		            default:
+		                type = 1;
+		                break;
+		        }
+		        var data;
+		        data = new FormData();
+		        data.append('type', type);
+		        data.append('valueDate',
+		            valueDate);
+		        let _html = "";
+		        const req = $.ajax({
+		            processData: false,
+		            contentType: false,
+		            url: "/api/v1/report/stocker/table/details",
+		            type: "POST",
+		            data: data
+		        });
+		        req.done(function(resp) {
+		            $("#model-title").text(("Thống kê chi tiết " + value + " " + valueDate));
+		            $("#tableDetails").empty();
+		            $.each(resp, function(i, item) {
+		                _html += '<tr>' +
+		                    '<td rowspan="' + item.itemReports.length + '">' +
+		                    (i + 1) +
+		                    '</td>' +
+		                    '<td rowspan="' + item.itemReports.length + '">' +
+		                    item.baseReport.nameDay +
+		                    '</td>' +
+		                    '<td rowspan="' + item.itemReports.length + '">' +
+		                    item.baseReport.idBillWareHouse +
+		                    '</td>' +
+		                    '<td rowspan="' + item.itemReports.length + '">' +
+		                    item.baseReport.nameWareHouse +
+		                    '</td>' +
+		                    '<td rowspan="' + item.itemReports.length + '">' +
+		                    item.baseReport.nameSupplier +
+		                    '</td>' +
+		                    '<td>' +
+		                    item.itemReports[0].name +
+		                    '</td>' +
+		                    '<td>' +
+		                    getVND(item.itemReports[0].price) +
+		                    '</td>' +
+		                    '<td>' +
+		                    item.itemReports[0].total +
+		                    '</td>' +
+		                    '</tr>';
+		                for (let i = 1; i < item.itemReports.length; i++) {
+		                    _html += '<tr>' +
+		                        '<td>' +
+		                        item.itemReports[i].name +
+		                        '</td>' +
+		                        '<td>' +
+		                        getVND(item.itemReports[i].price) +
+		                        '</td>' +
+		                        '<td>' +
+		                        item.itemReports[i].total +
+		                        '</td>' +
+		                        '</tr>';
+		                }
+		            })
+		            $("#tableDetails").append(_html);
+		        })
+		    });
+		    
+		    $('button[id="chart-view"]').click(function(ev) {
+		        ev.preventDefault();
+		        let categories;
+		        let text = 'Thống kê nhập kho ';
+		        let series = [];
+		        let lenght = 0;
+		        let data= {};
+		        if (value == "Ngày") {
+		            return;
+		        }
+		        if (value == "Tháng") {
+		        	data['type'] = 2;
+		            lenght = 12;
+		            text += 'theo Tháng'
+		            categories = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+		        }
+		        if (value == "Quý") {
+		        	data['type'] = 3;
+		            lenght = 4;
+		            text += 'theo Quý'
+		            categories = ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4'];
+		        }
+		        
+		        const req = $.ajax({
+		            url: "/api/v1/report/stocker/table",
+		            type: "POST",
+		            contentType: "application/json; charset=utf-8",
+		            dataType: "json",
+		            data: JSON.stringify(data)
+		        });
+	
+		        req.done(function(resp) {
+		            let obj1 = {};
+		            obj1["name"] = "Số lượng";
+		            obj1["data"] = [];
+		            let obj2 = {};
+		            obj2["name"] = "Tổng tiền";
+		            obj2["data"] = [];
+		            
+		            let temp = [];
+		            for(let i=1;i<=lenght;i++){
+		            	var obj = {
+		            			nameDay : i,
+		            			sumTotal : 0,
+		            			sumAmount : 0
+		            	}
+		            	temp[i] = obj;
+		            }
+		            
+		           for(let i=1;i<=lenght;i++){
+		            	for(let j=0;j<resp.datas.length;j++){
+		            		if(resp.datas[j].nameDay == temp[i].nameDay){
+		            			temp[i].sumTotal = resp.datas[j].sumTotal;
+		            			temp[i].sumAmount = resp.datas[j].sumAmount;
+		            			break;
+		            		}
+		            	}
+		            } 
+		            
+		            for(let i=1;i<=lenght;i++){
+		            	obj1["data"].push(temp[i].sumTotal);
+		            	obj2["data"].push(temp[i].sumAmount);
+		            }
+		            
+		            series.push(obj1);
+		            series.push(obj2);
+		            const json = {
+				            title: {
+				                text: text
+				            },
+				            xAxis: {
+				                categories: categories
+				            },
+				            yAxis: {
+				                title: {
+				                    text: 'Đơn vị : VND'
+				                },
+				                plotLines: [{
+				                    value: 0,
+				                    width: 1,
+				                    color: 'red'
+				                }]
+				            },
+				            tooltip: {
+				                valueSuffix: '°K'
+				            },
+				            legend: {
+				                layout: 'vertical',
+				                align: 'right',
+				                verticalAlign: 'middle',
+				                borderWidth: 2
+				            },
+				            plotOptions: {
+				                line: {
+				                    dataLabels: {
+				                        enabled: true
+				                    },
+				                    enableMouseTracking: false
+				                }
+				            },
+				            series: series
+				        };
+				        $('#high-charts').highcharts(json);
+		        })
+		        
+		    })
+	
+		    $(document).on('click', 'button[name="btnReport"]', function(e) {
+		        e.preventDefault();
+		        $('button[name="btnReport"]').removeClass("active");
+		        $(this).addClass('active');
+		        value = $(this).text();
+		        loadReportByTable(value);
+		    });
+		});
+	</script>
+
+	<script type="text/javascript">
+		
+	</script>
+</body>
+</html>

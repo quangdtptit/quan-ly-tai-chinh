@@ -120,63 +120,45 @@
 				<div class="row">
 					<div class="col-xs-12 table-responsive">
 						<table class="table table-striped">
+							<caption>Danh sách hàng hóa trong kho</caption>
 							<thead>
 								<tr>
 									<th>STT</th>
 									<th>Tên hàng</th>
-									<th>Giá</th>
-									<th>Số lượng</th>
+									<th>Giá nhập</th>
+									<th>Còn lại</th>
 									<th>Mô tả</th>
-									<th>Ngày nhập</th>
+									<th>Thời gian nhập</th>
 									<th style="width: 125px"></th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="item : ${items}">
-									<td>1</td>
+								<tr th:each="item,state : ${items}">
+									<td th:utext="${state.index + 1}"></td>
 									<td th:utext="${item.name}"></td>
-									<td th:utext="${item.price}"></td>
+									<td th:utext="${item.price} + ' VND'"></td>
 									<td th:utext="${item.total}"></td>
 									<td th:utext="${item.des}"></td>
 									<td th:utext="${item.createDate}"></td>
 									<td>
 										<div class="btn-group">
-											<button type="button" class="btn btn-default btn-sm"
-												title="Xóa">
+											<button th:id="${item.id}" type="button" class="btn btn-default btn-sm"
+												title="Xóa" name="btnDelete">
 												<i class="fa fa-trash-o"></i>
 											</button>
 											<a th:href="@{/stocker/items/} + ${item.id}" class="btn btn-default btn-sm"
 												title="Sửa">
 												<i class="fa fa-edit"></i>
 											</a>
+											<button th:disabled="${item.total == 0}" th:id="'output' +'-'+ ${item.id}" type="button" class="btn btn-default btn-sm"
+												title="Xuất kho" name="btnOuput" data-toggle="modal" data-target="#modal-chart-view">
+												<i class="fa fa-fw fa-exchange"></i>
+											</button>
 										</div>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<div style="text-align: center">
-							<ul class="pagination">
-								<li class="paginate_button previous disabled"
-									id="example2_previous"><a href="#"
-									aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a>
-								</li>
-								<li class="paginate_button active"><a href="#"
-									aria-controls="example2" data-dt-idx="1" tabindex="0">1</a></li>
-								<li class="paginate_button "><a href="#"
-									aria-controls="example2" data-dt-idx="2" tabindex="0">2</a></li>
-								<li class="paginate_button "><a href="#"
-									aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></li>
-								<li class="paginate_button "><a href="#"
-									aria-controls="example2" data-dt-idx="4" tabindex="0">4</a></li>
-								<li class="paginate_button "><a href="#"
-									aria-controls="example2" data-dt-idx="5" tabindex="0">5</a></li>
-								<li class="paginate_button "><a href="#"
-									aria-controls="example2" data-dt-idx="6" tabindex="0">6</a></li>
-								<li class="paginate_button next" id="example2_next"><a
-									href="#" aria-controls="example2" data-dt-idx="7" tabindex="0">Next</a>
-								</li>
-							</ul>
-						</div>
 					</div>
 					<!-- /.col -->
 				</div>
@@ -188,6 +170,41 @@
 
 		<!-- Main Footer -->
 		<footer th:replace="layout/footer :: footer"> </footer>
+		
+		<div class="modal fade" id="modal-chart-view">
+			<div class="modal-dialog" style="width: 400px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">Xuất sản phẩm</h4>
+					</div>
+					<div class="modal-body">
+						<form role="form" action="/stocker/output" method="POST">
+							<div class="box-body">
+								<div class="form-group">
+									<label>Số lượng xuất kho</label>
+									<input class="form-control" type="number" name="total" placeholder="Điền số lượng ...">
+								</div>
+								<div class="form-group">
+									<label>Giá xuất cho 1 sản phẩm</label>
+									<input class="form-control" type="number" name="price" placeholder="Điền giá ...">
+								</div>
+							</div>
+							<!-- /.box-body -->
+							<div class="box-footer">
+								<button type="submit" class="btn btn-primary">Đồng ý</button>
+							</div>
+							<input id="idOutput" type="hidden" name="id"/>
+						</form>				
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
 	</div>
 	<!-- ./wrapper -->
 
@@ -203,7 +220,7 @@
 					enctype="multipart/form-data">
 					<div class="box-body">
 						<div class="form-group">
-							<label for="exampleInputFile">File excel</label> <input
+							<label for="exampleInputFile">Hóa đơn nhập kho (excel)</label> <input
 								type="file" name="file" id="exampleInputFile">
 						</div>
 						<div class="form-group">
@@ -238,6 +255,48 @@
 	<script th:src="@{/dist/js/adminlte.min.js}"></script>
 
 	<script type="text/javascript">
+	
+		checkError();
+		function checkError(){
+			var location = window.location.href;
+			if(location.includes("error")){
+				alert("Có lỗi khi xuất sản phẩm !");
+			}
+		}
+	
+		$('button[name="btnOuput"]').click(function(e){
+			let id = $(this).attr("id");
+			let ids = id.split("-");
+			$("#idOutput").val(ids[1]);
+		})
+	
+		$('button[name="btnDelete"]').click(function(ev) {
+			ev.preventDefault();
+			var r = confirm("Bạn có chắc chắn muốn xóa sản phẩm này !");
+			if (r == true) {
+				let id = $(this).attr("id");
+				const reqSup = $.ajax({
+					url: "/api/v1/item/" + id,
+	                type: "DELETE"
+				});
+				
+				reqSup.done(function(resp){
+					if(resp == true){
+						alert("Xóa Thành Công !");
+						window.location.href = "http://localhost:8080/stocker/items";
+					}else{
+						alert("Không được xóa sản phẩm này vì đang được sử dụng !");
+					}
+				})
+				
+				reqSup.fail(function (error) {
+                	alert("Đã có lỗi khi xóa !");
+            	})
+			} 
+			
+		})
+		
+	
 		$("#btnImport").click(function(ev) {
 			ev.preventDefault();
 			

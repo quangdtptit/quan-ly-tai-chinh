@@ -1,6 +1,6 @@
 package com.example.model.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import com.example.model.annotation.ColumnExcel;
 import com.example.model.enumerate.CustomCellType;
@@ -21,7 +21,26 @@ public class ItemDTO {
 	@ColumnExcel(col = 3, title = "Mô tả", type = CustomCellType._STRING)
 	private String des;
 
-	private Date createDate;
+	private Timestamp createDate;
+
+	public ItemDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public ItemDTO(String name, long price, int total) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.total = total;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -39,14 +58,6 @@ public class ItemDTO {
 		this.price = price;
 	}
 
-	public String getDes() {
-		return des;
-	}
-
-	public void setDes(String des) {
-		this.des = des;
-	}
-
 	public int getTotal() {
 		return total;
 	}
@@ -55,20 +66,26 @@ public class ItemDTO {
 		this.total = total;
 	}
 
-	public Date getCreateDate() {
+	public String getDes() {
+		return des;
+	}
+
+	public void setDes(String des) {
+		this.des = des;
+	}
+
+	public Timestamp getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
+	@Override
+	public String toString() {
+		return "ItemDTO [id=" + id + ", name=" + name + ", price=" + price + ", total=" + total + ", des=" + des
+				+ ", createDate=" + createDate + "]";
 	}
 
 }

@@ -24,7 +24,7 @@ public class WorkEntity {
 	private Date day;
 
 	@Column(name = "soCong")
-	private int number;
+	private float number;
 
 	@Column(name = "moTa")
 	private String des;
@@ -49,11 +49,11 @@ public class WorkEntity {
 		this.day = day;
 	}
 
-	public int getNumber() {
+	public float getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(float number) {
 		this.number = number;
 	}
 

@@ -7,5 +7,5 @@ import com.example.model.BillWareHouseEntity;
 
 @Repository
 public interface BillWareHouseRepository extends JpaRepository<BillWareHouseEntity, Integer> {
-
+	
 }

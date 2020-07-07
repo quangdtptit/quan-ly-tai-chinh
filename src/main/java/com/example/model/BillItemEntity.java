@@ -1,6 +1,6 @@
 package com.example.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -41,7 +41,7 @@ public class BillItemEntity {
 	@OneToMany(mappedBy = "billItemEntity")
 	private Set<ItemBoughtEntity> itemBoughtEntities;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "maKhachHang", nullable = false)
 	private CustomerEntity customerEntity;
 

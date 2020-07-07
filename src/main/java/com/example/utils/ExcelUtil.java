@@ -29,6 +29,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.example.model.annotation.ColumnExcel;
 import com.example.model.dto.ItemDTO;
+import com.example.model.dto.SalaryDTO;
+import com.example.model.dto.WorkDTO;
 
 public class ExcelUtil {
 
@@ -288,12 +290,49 @@ public class ExcelUtil {
 		}
 	}
 
-	public static void main(String[] args) {
-		File file = new File("demo.xlsx");
-		List<ItemDTO> itemDTOs = new ExcelUtil().importFileExcel(file, ItemDTO.class);
-		for (ItemDTO e : itemDTOs) {
-			System.out.println(e.getName() + " - " + e.getTotal());
+	public List<SalaryDTO> readFileSalary(File file) {
+		try (Workbook workbook = new XSSFWorkbook(file);) {
+			List<SalaryDTO> result = new ArrayList<>();
+			Sheet sheet = workbook.getSheetAt(0);
+			Iterator<Row> rowIterator = sheet.rowIterator();
+
+			if (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+			}
+			while (rowIterator.hasNext()) {
+				SalaryDTO salaryDTO = new SalaryDTO();
+				List<WorkDTO> workDTOs = new ArrayList<>();
+				Row row = rowIterator.next();
+				for (int i = 0; i < 33; i++) {
+					Cell cell = row.getCell(i);
+					try {
+						if (i == 0) {
+							salaryDTO.setIdStaff((int) Float.parseFloat(cell.toString()));
+						} else if (i == 1) {
+							salaryDTO.setNameStaff(cell.toString());
+						} else {
+							WorkDTO workDTO = new WorkDTO();
+							workDTO.setDay(i - 1);
+							workDTO.setNumberWork(Float.parseFloat(cell.toString()));
+							workDTOs.add(workDTO);
+						}
+					} catch (Exception e) {
+					}
+				}
+				salaryDTO.setWorkDTOs(workDTOs);
+				result.add(salaryDTO);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
+	}
+
+	public static void main(String[] args) {
+		ExcelUtil excelUtil = new ExcelUtil();
+		List<SalaryDTO> result = excelUtil.readFileSalary(new File("bang_luong_thang_5.xlsx"));
+		System.out.println(result);
 	}
 
 }

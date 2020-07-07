@@ -10,4 +10,6 @@ import com.example.model.StaffEntity;
 @Repository
 public interface StaffRepository extends JpaRepository<StaffEntity, Integer> {
 	Optional<StaffEntity> findByUsername(String username);
+
+	Optional<StaffEntity> findById(Integer id);
 }

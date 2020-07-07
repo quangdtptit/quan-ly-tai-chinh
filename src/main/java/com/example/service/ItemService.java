@@ -15,4 +15,8 @@ public interface ItemService {
 	ItemDTO findById(Integer id);
 	
 	ItemDTO save(ItemDTO itemDTO);
+	
+	boolean delete(Integer id);
+	
+	boolean itemOuput(ItemDTO itemDTO);
 }

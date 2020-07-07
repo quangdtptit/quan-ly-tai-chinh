@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Thống kê lương nhân viên</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+<link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}">
+<!-- Google Font -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<style type="text/css">
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding: 10px;
+}
+</style>
+
+<script type="text/javascript">
+	function getVND(x) {
+		return x.toLocaleString('it-IT', {
+			style : 'currency',
+			currency : 'VND'
+		});
+	}
+</script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<!-- Main Header -->
+		<header th:replace="layout/header :: header"> </header>
+
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside th:replace="layout/menu :: menu"></aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h4>Thống kê lương nhân viên</h4>
+				<ol class="breadcrumb">
+					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
+							chủ</a></li>
+					<li class="active">Thống kê lương nhân viên</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="invoice">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="page-header"
+							style="display: flex; justify-content: space-between; align-items: center; margin: 0">
+							<div class="btn-group">
+								<a name="btnReport" th:href="@{/report/salaries?type=month}"
+									class="btn btn-default btn-sm">Tháng</a> <a name="btnReport"
+									th:href="@{/report/salaries?type=quarter}"
+									class="btn btn-default btn-sm">Quý</a>
+							</div>
+							<div class="input-group">
+								<button id="chart-view" class="btn btn-default btn-sm"
+									data-toggle="modal" data-target="#modal-chart-view">Xem
+									dưới dạng biểu đồ</button>
+							</div>
+						</div>
+					</div>
+					<!-- /.col -->
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12" id="content">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th th:utext="${type}">Tháng</th>
+									<th>Tổng thưởng</th>
+									<th>Tổng phạt</th>
+									<th>Tổng số công</th>
+									<th>Tổng tiền</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="salary, state : ${salaries}">
+									<td th:utext="${state.index + 1}"></td>
+									<td th:utext="${salary.type}"></td>
+									<td th:utext="${salary.reward}"></td>
+									<td th:utext="${salary.punish}"></td>
+									<td th:utext="${salary.numberWork}"></td>
+									<td th:utext="${salary.sum} + ' VNĐ'"></td>
+									<td><a name="viewDetails" data-toggle="modal" data-target="#modal-default"
+										th:id="${type} + '-' + ${salary.type}" href="#">Xem chi
+											tiết</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer th:replace="layout/footer :: footer"> </footer>
+		
+		<div class="modal fade" id="modal-default">
+		<div class="modal-dialog" style="width: 900px">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title" id="model-title">Chi tiết ...</h4>
+				</div>
+				<div class="modal-body">
+					<table style="width: 100%">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>Mã nhân viên</th>
+								<th>Tên nhân viên</th>
+								<th>Tiền/Công</th>
+								<th>Tổng số công</th>
+								<th>Thưởng</th>
+								<th>Phạt</th>
+								<th>Tổng tiền</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetails">
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	
+	
+	<div class="modal fade" id="modal-chart-view">
+			<div class="modal-dialog" style="width: 900px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">Biểu đồ</h4>
+					</div>
+					<div class="modal-body">
+						<div id="high-charts"
+							style="width: 100%; height: 400px; margin: 0 auto"></div>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</div>
+	<!-- ./wrapper -->
+
+	
+
+
+
+	<!-- REQUIRED JS SCRIPTS -->
+	<!-- jQuery 3 -->
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script th:inline="javascript">
+		$('a[name="viewDetails"]').click(function(e) {
+			e.preventDefault();
+			var type = "";
+			var id = $(this).attr("id");
+			
+			var ids = id.split("-");
+			if (ids[0] == "Tháng")
+				type = "month";
+			else
+				type = "qq";
+			var numbers = ids[1].split(" ");
+			const req = $.ajax({
+				url : "/api/v1/salaries/" + numbers[1] + "?type=" + type,
+				type : "GET"
+			});
+			req.done(function(resp) {
+				$("#tableDetails").empty();
+				$("#model-title").text("Chi tiết "+ ids[1]);
+				let _html = "";
+				for(let i=0;i<resp.length;i++){
+					_html+= '<tr>';
+					_html+= '<td>'+ (i+1) +'</td>' +
+							'<td>'+ resp[i].idStaff +'</td>' +
+							'<td>'+ resp[i].nameStaff +'</td>' +
+							'<td>'+ getVND(resp[i].moneyOnWork) +'</td>' +
+							'<td>'+ resp[i].numberWork +'</td>' +
+							'<td>'+ getVND(resp[i].reward) +'</td>'+
+							'<td>'+ getVND(resp[i].punish) +'</td>'+
+							'<td>'+ getVND(resp[i].sum) +'</td>';
+					_html+= '</tr>';
+				}
+				$("#tableDetails").append(_html);
+			})
+		})
+		
+		$('button[id="chart-view"]').click(function(ev) {
+		        ev.preventDefault();
+		        const value = [[${type}]];
+		        let categories;
+		        let text = 'Thống kê lương nhân viên ';
+		        let series = [];
+		        let length = 0;
+		        let type = "";
+		        if (value == "Ngày") {
+		            return;
+		        }
+		        if (value == "Tháng") {
+		        	type = "month";
+		        	length = 12;
+		            text += 'theo Tháng'
+		            categories = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+		        }
+		        if (value == "Quý") {
+		        	type= "qq";
+		        	length = 4;
+		            text += 'theo Quý'
+		            categories = ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4'];
+		        }
+		        
+		        const req = $.ajax({
+		            url: "/api/v1/salaries?type="+type,
+		            type: "GET"
+		        });
+		        
+		        req.done(function(resp){
+		        	let obj1 = {};
+		            obj1["name"] = "Số công";
+		            obj1["data"] = [];
+		            let obj2 = {};
+		            obj2["name"] = "Tổng tiền";
+		            obj2["data"] = [];
+		            
+		            for(let i=0;i<resp.length;i++){
+		            	obj1["data"].push(resp[i].numberWork);
+		            	obj2["data"].push(resp[i].sum);
+		            	length --;
+		            }
+		            
+		            while(length-- != 0){
+		            	obj1["data"].push(0);
+		            	obj2["data"].push(0);
+		            }
+		            
+		            series.push(obj1);
+		            series.push(obj2);
+		            const json = {
+				            title: {
+				                text: text
+				            },
+				            xAxis: {
+				                categories: categories
+				            },
+				            yAxis: {
+				                title: {
+				                    text: 'Đơn vị : VND'
+				                },
+				                plotLines: [{
+				                    value: 0,
+				                    width: 1,
+				                    color: 'red'
+				                }]
+				            },
+				            tooltip: {
+				                valueSuffix: '°K'
+				            },
+				            legend: {
+				                layout: 'vertical',
+				                align: 'right',
+				                verticalAlign: 'middle',
+				                borderWidth: 2
+				            },
+				            plotOptions: {
+				                line: {
+				                    dataLabels: {
+				                        enabled: true
+				                    },
+				                    enableMouseTracking: false
+				                }
+				            },
+				            series: series
+				        };
+				        $('#high-charts').highcharts(json);
+		        })
+		})
+	</script>
+</body>
+</html>

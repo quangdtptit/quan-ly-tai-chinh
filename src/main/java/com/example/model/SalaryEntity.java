@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_bangluong")
 public class SalaryEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "maBangLuong")
@@ -30,11 +30,14 @@ public class SalaryEntity {
 
 	@Column(name = "moTa")
 	private String des;
-	
+
+	@Column(name = "status")
+	private String status;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maNhanVien", nullable = false)
 	private StaffEntity staffEntity;
-	
+
 	@OneToMany(mappedBy = "salaryEntity")
 	private Set<WorkEntity> workEntities;
 
@@ -85,7 +88,13 @@ public class SalaryEntity {
 	public void setWorkEntities(Set<WorkEntity> workEntities) {
 		this.workEntities = workEntities;
 	}
-	
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 }

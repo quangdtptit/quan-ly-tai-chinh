@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Thông kê hóa đơn</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+<link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}">
+<!-- Google Font -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<!-- Main Header -->
+		<header th:replace="layout/header :: header"> </header>
+
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside th:replace="layout/menu :: menu"></aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h4>Danh sách hóa đơn</h4>
+				<ol class="breadcrumb">
+					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
+							chủ</a></li>
+					<li class="active">Danh sách hóa đơn</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="invoice">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="page-header"
+							style="display: flex; justify-content: space-between; align-items: center; margin: 0">
+							<div class="btn-group">
+								
+							</div>
+							<form action="#" method="get">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Search...">
+									<span class="input-group-btn">
+										<button type="submit" name="search" id="search-btn"
+											class="btn btn-flat">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- /.col -->
+				</div>
+				<div class="row">
+					<div class="col-xs-12 table-responsive">
+						<table class="table table-striped">
+							<caption>Danh sách hóa đơn</caption>
+							<thead>
+								<tr>
+									<th>Thời gian</th>
+									<th>Mã hóa đơn</th>
+									<th>Tổng số lượng</th>
+									<th>Tổng giá</th>
+									<th>Nhân viên</th>
+									<th>Tên khách hàng</th>
+									<th style="width: 100px"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${list}">
+									<td th:utext="${item.createTime}"></td>
+									<td th:utext="${item.id}"></td>
+									<td th:utext="${item.total}"></td>
+									<td th:utext="${item.amount}  + ' VND'"></td>
+									<td th:utext="${item.createBy}"></td>
+									<td th:utext="${item.customerEntity.name}"></td>
+									<td>
+										<a href="#">Xem chi tiết</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.col -->
+				</div>
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer th:replace="layout/footer :: footer"> </footer>
+
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- REQUIRED JS SCRIPTS -->
+
+	<!-- jQuery 3 -->
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+</body>
+</html>

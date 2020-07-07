@@ -32,8 +32,8 @@ public class ItemBoughtEntity {
 	private int number;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "maHangHoa", nullable = false)
-	private ItemEntity itemEntity;
+	@JoinColumn(name = "maHangHoaXuatKho", nullable = false)
+	private ItemOutputEntity itemEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maHoaDonBanHang", nullable = false)
@@ -79,11 +79,11 @@ public class ItemBoughtEntity {
 		this.number = number;
 	}
 
-	public ItemEntity getItemEntity() {
+	public ItemOutputEntity getItemEntity() {
 		return itemEntity;
 	}
 
-	public void setItemEntity(ItemEntity itemEntity) {
+	public void setItemEntity(ItemOutputEntity itemEntity) {
 		this.itemEntity = itemEntity;
 	}
 

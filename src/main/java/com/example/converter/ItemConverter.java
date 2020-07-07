@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.model.BillWareHouseEntity;
 import com.example.model.ItemEntity;
+import com.example.model.ItemOutputEntity;
 import com.example.model.WareHouseEntity;
 import com.example.model.dto.ItemDTO;
 
@@ -24,6 +25,10 @@ public class ItemConverter {
 
 	public ItemEntity toEntity(ItemDTO dto) {
 		return mapper.map(dto, ItemEntity.class);
+	}
+	
+	public ItemDTO toDTO(ItemOutputEntity entity) {
+		return mapper.map(entity, ItemDTO.class);
 	}
 
 	public List<ItemDTO> toDTOs(List<ItemEntity> entities) {

@@ -1,7 +1,6 @@
 package com.example.model;
 
-import java.sql.Date;
-import java.util.Set;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -42,7 +41,7 @@ public class ItemEntity {
 
 	@CreatedDate
 	@Column(name = "createDate")
-	private Date createDate;
+	private Timestamp createDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maKho", nullable = false)
@@ -52,8 +51,8 @@ public class ItemEntity {
 	@JoinColumn(name = "maHoaDonNhapKho", nullable = false)
 	private BillWareHouseEntity billWareHouseEntity;
 
-	@OneToMany(mappedBy = "itemEntity")
-	private Set<ItemBoughtEntity> itemBoughtEntities;
+	@OneToOne(mappedBy = "itemEntity")
+	private ItemOutputEntity itemOutputEntity;
 
 	public Integer getId() {
 		return id;
@@ -111,19 +110,19 @@ public class ItemEntity {
 		this.billWareHouseEntity = billWareHouseEntity;
 	}
 
-	public Set<ItemBoughtEntity> getItemBoughtEntities() {
-		return itemBoughtEntities;
+	public ItemOutputEntity getItemOutputEntity() {
+		return itemOutputEntity;
 	}
 
-	public void setItemBoughtEntities(Set<ItemBoughtEntity> itemBoughtEntities) {
-		this.itemBoughtEntities = itemBoughtEntities;
+	public void setItemOutputEntity(ItemOutputEntity itemOutputEntity) {
+		this.itemOutputEntity = itemOutputEntity;
 	}
 
-	public Date getCreateDate() {
+	public Timestamp getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
 	}
 

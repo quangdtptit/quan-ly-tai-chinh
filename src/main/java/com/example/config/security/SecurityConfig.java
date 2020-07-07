@@ -37,15 +37,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		String login = "/login";
-		String[] permitAll = {"/j_spring_security_login", login};
+		String[] permitAll = {"/j_spring_security_login", login, "/j_spring_security_logout"};
 		String[] anyRoles = {"/home"};
-		String[] adminRoles = {"/admin/**"};
-		
+		String[] adminRoles = {"/staffs/**"};
+		String[] wareHouseRoles = {"/stocker/items/**"};
+		String[] accountingRoles= {"/report/stoker" , "/report/salaries", "/salaries/**"};
+		String[] userRoles = {"/items/**"};
 		http.csrf().disable();
 		http.authorizeRequests()
 			.antMatchers(permitAll).permitAll()
-			.antMatchers(anyRoles).hasAnyRole("USER","ADMIN")
+			.antMatchers(anyRoles).hasAnyRole("USER","ADMIN","WAREHOUSE","ACCOUNT")
+			.antMatchers(wareHouseRoles).hasAnyRole("ADMIN","WAREHOUSE")
+			.antMatchers(accountingRoles).hasAnyRole("ADMIN","ACCOUNT")
 			.antMatchers(adminRoles).hasRole("ADMIN")
+			.antMatchers(userRoles).hasAnyRole("ADMIN","USER")
 			.anyRequest()
 			.authenticated()
 			.and()

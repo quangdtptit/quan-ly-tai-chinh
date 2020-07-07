@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Thao tác nhân viên</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+<link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}">
+<!-- Google Font -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<!-- Main Header -->
+		<header th:replace="layout/header :: header"> </header>
+
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside th:replace="layout/menu :: menu"></aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h4 th:if="${staff.id}">Sửa nhân viên</h4>
+				<h4 th:unless="${staff.id}">Thêm nhân viên</h4>
+				<ol class="breadcrumb">
+					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
+							chủ</a></li>
+					<li class="active" th:if="${staff.id}">Sửa nhân viên</li>
+					<li class="active" th:unless="${staff.id}">Thêm nhân viên</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="invoice">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-info" style="border-top-color: white;">
+							<!-- form start -->
+							<form th:action="@{/staffs/}" class="form-horizontal"
+								th:object="${staff}" method="POST">
+								<div class="box-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Họ và tên</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control"
+												placeholder="Điền họ và tên ..." th:field="*{fullName}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">SĐT</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control"
+												placeholder="Điền sđt ..." th:field="*{phone}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Địa chỉ</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control"
+												placeholder="Điền địa chỉ ..." th:field="*{address}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Tài khoản</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control"
+												placeholder="Điền tài khoản ..." th:field="*{username}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Role</label>
+										<div class="col-sm-10">
+											<select class="form-control" th:field="*{role}">
+												<th:block th:each="role : ${roles}">
+                                                	<option th:text="${role}" th:value="${role}" th:selected="${role == staff.role}"></option>
+                                            	</th:block>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Chi Nhánh</label>
+										<div class="col-sm-10">
+											<select class="form-control" th:field="*{idBranch}">
+												<th:block th:each="branch : ${branchs}">
+                                                	<option th:text="${branch.name}" th:value="${branch.id}" th:selected="${branch.id == staff.idBranch}"></option>
+                                            	</th:block>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<input type="submit" class="btn btn-info" value="Đồng ý">
+										</div>
+									</div>
+								</div>
+								<input type="hidden" th:field="*{password}">
+								<input type="hidden" th:field="*{id}">
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer th:replace="layout/footer :: footer"> </footer>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- REQUIRED JS SCRIPTS -->
+
+	<!-- jQuery 3 -->
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+
+	<!-- Optionally, you can add Slimscroll and FastClick plugins.
+     Both of these plugins are recommended to enhance the
+     user experience. -->
+</body>
+</html>

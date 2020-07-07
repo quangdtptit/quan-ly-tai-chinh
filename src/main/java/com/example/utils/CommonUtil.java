@@ -12,7 +12,7 @@ public class CommonUtil {
 		long amount = 0;
 		for (ItemDTO itemDTO : itemDTOs) {
 			total += itemDTO.getTotal();
-			amount += itemDTO.getPrice();
+			amount += itemDTO.getPrice() * itemDTO.getTotal();
 		}
 		BillWareHouseEntity billWareHouseEntity = new BillWareHouseEntity();
 		billWareHouseEntity.setTotal(total);

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Quản lý bán hàng</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+<link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}">
+<!-- Google Font -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<!-- Main Header -->
+		<header th:replace="layout/header :: header"> </header>
+
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside th:replace="layout/menu :: menu"></aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h4>Quản lý bán hàng</h4>
+				<ol class="breadcrumb">
+					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
+							chủ</a></li>
+					<li class="active">Quản lý bán hàng</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="invoice">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="page-header"
+							style="display: flex; justify-content: space-between; align-items: center; margin: 0">
+							<div class="btn-group">
+								<a href="/items/order">Xem giỏ hàng</a>
+							</div>
+							<form action="#" method="get">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Search...">
+									<span class="input-group-btn">
+										<button type="submit" name="search" id="search-btn"
+											class="btn btn-flat">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- /.col -->
+				</div>
+				<div class="row">
+					<div class="col-xs-12 table-responsive">
+						<table class="table table-striped">
+							<caption>Danh sách hàng hóa</caption>
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>Tên hàng</th>
+									<th>Giá bán</th>
+									<th>Còn lại</th>
+									<th>Mô tả</th>
+									<th style="width: 100px"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item,state : ${items}">
+									<td th:utext="${state.index + 1}"></td>
+									<td th:utext="${item.name}"></td>
+									<td th:utext="${item.price} + ' VND'"></td>
+									<td th:utext="${item.total}"></td>
+									<td th:utext="${item.des}"></td>
+									<td>
+										<div class="btn-group">
+											<button th:disabled="${item.total == 0}" th:id="${item.id}" type="button" class="btn btn-default btn-sm"
+												title="Thêm vào hóa đơn" name="btlOrder" data-toggle="modal" data-target="#modal-chart-view">
+												<i class="fa fa-fw fa-ambulance"></i>
+											</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.col -->
+				</div>
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer th:replace="layout/footer :: footer"> </footer>
+
+		<div class="modal fade" id="modal-chart-view">
+			<div class="modal-dialog" style="width: 400px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">Mua sản phẩm</h4>
+					</div>
+					<div class="modal-body">
+						<form role="form" action="#" method="POST">
+							<div class="box-body">
+								<div class="form-group">
+									<label>Số lượng</label>
+									<input id="total" class="form-control" type="number" name="total" placeholder="Điền số lượng ...">
+								</div>
+							</div>
+							<!-- /.box-body -->
+							<div class="box-footer">
+								<button id="btnSubmit" type="submit" class="btn btn-primary">Đồng ý</button>
+							</div>
+							<input id="idOutput" type="hidden" name="id"/>
+						</form>				
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- REQUIRED JS SCRIPTS -->
+
+	<!-- jQuery 3 -->
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+
+	<script type="text/javascript">
+		$('button[name="btlOrder"]').click(function(e){
+			let id = $(this).attr("id");
+			$("#idOutput").val(id);
+		})
+		
+		$("#btnSubmit").click(function(e){
+			e.preventDefault();
+			let total = $("#total").val();
+			let idOutput = $("#idOutput").val();
+			var obj = {
+					total: parseInt(total),
+					id: parseInt(idOutput)
+			}
+			let list = JSON.parse(localStorage.getItem("order"));
+			if(list == undefined){
+				list = [];
+			}
+			if(list.length == 0){
+				list.push(obj);
+			}else{
+				let check = true;
+				for(let i=0;i<list.length;i++){
+					var temp = list[i];
+					if(temp.id == obj.id){
+						temp.total += obj.total;
+						check = false;
+						break;
+					}
+				}
+				if(check){
+					list.push(obj);
+				}
+			}
+			localStorage.setItem("order", JSON.stringify(list));
+			alert("Thêm giỏ hàng thành công !");
+			window.location.href = "http://localhost:8080/items/order";
+		})
+	</script>
+</body>
+</html>

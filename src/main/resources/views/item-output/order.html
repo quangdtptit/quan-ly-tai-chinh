@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Giỏ hàng</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+<link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}">
+<!-- Google Font -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<script type="text/javascript">
+	function getVND(x) {
+		return x.toLocaleString('it-IT', {
+			style : 'currency',
+			currency : 'VND'
+		});
+	}
+</script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+
+		<!-- Main Header -->
+		<header th:replace="layout/header :: header"> </header>
+
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside th:replace="layout/menu :: menu"></aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h4>Giỏ hàng</h4>
+				<ol class="breadcrumb">
+					<li><a href="/home"><i class="fa fa-dashboard"></i>Trang
+							chủ</a></li>
+					<li class="active">Giỏ hàng</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="invoice">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="page-header"
+							style="display: flex; justify-content: space-between; align-items: center; margin: 0">
+							<div class="btn-group">
+
+							</div>
+							<form action="#" method="get">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Search...">
+									<span class="input-group-btn">
+										<button type="submit" name="search" id="search-btn"
+											class="btn btn-flat">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- /.col -->
+				</div>
+				<div class="row">
+					<div class="col-xs-12 table-responsive">
+						<table class="table table-striped">
+							<caption>Danh sách hàng hóa trong giỏ hàng</caption>
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>Tên hàng</th>
+									<th>Giá bán</th>
+									<th>Số lượng</th>
+									<th>Tổng tiền</th>
+								</tr>
+							</thead>
+							<tbody id="order">
+								
+							</tbody>
+						</table>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Tên khách hàng</label>
+								<div class="col-sm-10">
+									<input id="name" type="text" class="form-control" placeholder="Điền tên khách hàng ...">
+								</div>
+						</div>
+						<button id="mua" type="button" class="btn btn-default btn-sm" >
+								Mua
+						</button>
+						<button id="huy" type="button" class="btn btn-default btn-sm">
+								Hủy
+						</button>
+					</div>
+					<!-- /.col -->
+				</div>
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer th:replace="layout/footer :: footer"> </footer>
+		
+	</div>
+	<!-- ./wrapper -->
+
+
+	<!-- REQUIRED JS SCRIPTS -->
+
+	<!-- jQuery 3 -->
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+
+	<script>
+		$( document ).ready(function() {
+			
+			checkLocal();
+			
+			$("#huy").click(function(e){
+				let list = [];
+				localStorage.setItem("order",JSON.stringify(list));
+				window.location.href = "http://localhost:8080/items";
+			})
+			
+			$("#mua").click(function(e){
+				let name = $("#name").val();
+				let list = JSON.parse(localStorage.getItem("order"));
+				const req = $.ajax({
+		            url: "/api/v1/item/payment?name="+name,
+		            type: "POST",
+		            contentType: "application/json; charset=utf-8",
+		            dataType: "json",
+		            data: JSON.stringify(list)
+		        });
+				
+				req.done(function(resp){
+					if(resp == 200){
+						alert("Thanh toán thành công !");
+						let list = [];
+						localStorage.setItem("order",JSON.stringify(list));
+						window.location.href = "http://localhost:8080/items";
+					}
+				})
+			})
+			
+			function tongTien(total,price){
+				return total*price;
+			}
+			
+		    function checkLocal(){
+		    	let list = JSON.parse(localStorage.getItem("order"));
+		    	var data = [];
+		    	for(let i=0;i<list.length;i++){
+		    		data.push(list[i].id);
+		    	}
+		    	const req = $.ajax({
+		            url: "/api/v1/item/order",
+		            type: "POST",
+		            contentType: "application/json; charset=utf-8",
+		            dataType: "json",
+		            data: JSON.stringify(data)
+		        });
+		    	
+		    	req.done(function(resp){
+		    		$("#order").empty();
+		    		let _html = "";
+		    		for(let i=0;i<resp.length;i++){
+		    			_html += '<tr>';
+		    			_html +=    '<td>' + (i+1) + '</td>'+
+		    						'<td>' + resp[i].name + '</td>'+
+		    						'<td>' + getVND(resp[i].price) + '</td>' +
+		    						'<td>' + list[i].total + '</td>'+
+		    						'<td>' + getVND(tongTien(list[i].total,resp[i].price)) + '</td>';
+		    			_html += '</tr>';
+		    		}
+		    		if(list.length == 0){
+		    			_html += '<tr>';
+		    			_html += '<td>Không có sản phẩm nào trong giỏ !</td>';
+		    			_html += '</tr>';
+		    		}
+		    		$("#order").append(_html);
+		    		
+		    		for(let i=0;i<resp.length;i++){
+		    			if(resp[i].total < list[i].total){
+		    				$("#mua").prop('disabled', true);
+		    				break;
+		    			}
+		    		}
+		    	})
+		    }
+		});
+	</script>
+</body>
+</html>

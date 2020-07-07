@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +54,25 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public ItemDTO save(ItemDTO itemDTO) {
 		ItemEntity entity = itemConverter.toEntity(itemDTO);
+		entity.setCreateDate(new Timestamp(System.currentTimeMillis()));
 		entity = itemRepository.save(entity);
 		return itemConverter.toDTO(entity);
+	}
+
+	@Override
+	public boolean delete(Integer id) {
+		try {
+			itemRepository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean itemOuput(ItemDTO itemDTO) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
