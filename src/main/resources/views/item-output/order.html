@@ -184,14 +184,27 @@
 		    	req.done(function(resp){
 		    		$("#order").empty();
 		    		let _html = "";
-		    		for(let i=0;i<resp.length;i++){
-		    			_html += '<tr>';
-		    			_html +=    '<td>' + (i+1) + '</td>'+
-		    						'<td>' + resp[i].name + '</td>'+
-		    						'<td>' + getVND(resp[i].price) + '</td>' +
-		    						'<td>' + list[i].total + '</td>'+
-		    						'<td>' + getVND(tongTien(list[i].total,resp[i].price)) + '</td>';
-		    			_html += '</tr>';
+		    		if(list.length > 0){
+		    			let sumTotal = 0;
+		    			let sumPrice = 0;
+			    		for(let i=0;i<resp.length;i++){
+			    			sumTotal += list[i].total;
+			    			sumPrice += resp[i].price * list[i].total;
+			    			_html += '<tr>';
+			    			_html +=    '<td>' + (i+1) + '</td>'+
+			    						'<td>' + resp[i].name + '</td>'+
+			    						'<td>' + getVND(resp[i].price) + '</td>' +
+			    						'<td>' + list[i].total + '</td>'+
+			    						'<td>' + getVND(tongTien(list[i].total,resp[i].price)) + '</td>';
+			    			_html += '</tr>';
+			    		}
+			    		_html += '<tr>';
+			    		_html += '<td>Tổng</td>'+
+			    				'<td></td>'+
+			    				'<td></td>'+
+			    				'<td>' + sumTotal +'</td>'+
+			    				'<td>' + getVND(sumPrice) + '</td>';
+			    		_html += '</tr>';
 		    		}
 		    		if(list.length == 0){
 		    			_html += '<tr>';
